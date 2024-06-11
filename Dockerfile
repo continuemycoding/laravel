@@ -1,5 +1,5 @@
 # 使用 PHP 带有 Apache 的官方镜像作为基础镜像
-FROM php:7-apache
+FROM php:7.2-apache
 
 # 安装 PDO 扩展
 RUN docker-php-ext-install pdo pdo_mysql
@@ -8,6 +8,14 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN apt-get update && \
     apt-get install -y libzip-dev unzip && \
     docker-php-ext-install zip
+
+# 安装 GD 扩展的依赖
+RUN apt-get update && \
+    apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev
+
+# 安装 GD 扩展
+RUN docker-php-ext-configure gd && \
+    docker-php-ext-install gd
 
 # 安装 Composer
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
